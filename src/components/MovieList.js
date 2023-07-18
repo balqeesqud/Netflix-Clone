@@ -1,10 +1,9 @@
 import React from 'react';
 import Movie from './Movie';
 
-// import ReactDOM from 'react-dom';
-
-function MovieList({ moviesData }) {
+function MovieList({ moviesData, commentHandler }) {
   console.log(moviesData);
+  console.log(commentHandler);
   return (
     <div
       style={{
@@ -13,16 +12,17 @@ function MovieList({ moviesData }) {
         marginBottom: '100px',
       }}
     >
-      {moviesData &&
-        moviesData.map((movie) => (
-          <Movie
-            key={movie.id}
-            title={movie.title}
-            overview={movie.overview}
-            img={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-            date={movie.release_date}
-          />
-        ))}
+      {moviesData.map((movie) => (
+        <Movie
+          commentHandler={commentHandler} 
+          data={movie}
+          key={movie.id}
+          title={movie.title}
+          overview={movie.overview}
+          img={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+          date={movie.release_date}
+        />
+      ))}
     </div>
   );
 }

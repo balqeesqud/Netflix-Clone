@@ -1,17 +1,10 @@
 import { useEffect, useState } from 'react';
-// import Button from 'react-bootstrap/Button';
-// import Card from 'react-bootstrap/Card';
-// import Movie from './Movie';
 import React from 'react';
 import MovieList from './MovieList';
-
 // import Movie from './Movie';
 
 function Home() {
   const [movieData, setMovieData] = useState([]);
-
-  //'https://movies-api-swqe.onrender.com/trending'
-  // `${process.env.REACT_APP_SERVER_URL}/trending`
 
   async function logMovies() {
     const URL = process.env.REACT_APP_SERVER_URL;
@@ -19,14 +12,25 @@ function Home() {
     // console.log('Response:', response);
 
     const movies = await response.json();
-    console.log('movies printed');
     setMovieData(movies);
-    // console.log('inside logMovies', movies);
+  }
+  // will get the new object with comment
+  function commentHandler(newComment, id) {
+    // console.log(newComment, id, 'from home component');
+    movieData.map((movie) => {
+      if (movie.id === id) {
+        movie.comment = newComment.userComment;
+        return movie;
+      } else {
+        return movie;
+      }
+    });
+    console.log('Comment Handler', movieData);
   }
 
   useEffect(() => {
     logMovies();
-    console.log('inside use effect', movieData);
+    // console.log('inside use effect', movieData);
   }, []);
 
   return (
@@ -42,20 +46,10 @@ function Home() {
           marginBottom: '100px',
         }}
       >
-        <MovieList moviesData={movieData} />
+        <MovieList moviesData={movieData} commentHandler={commentHandler} />
       </div>
     </div>
   );
 }
 
 export default Home;
-
-/* {movieData.map((movie) => (
-          <Movie
-            key={movie.id}
-            title={movie.title}
-            overview={movie.overview}
-            img={movie.poster_path}
-            date={movie.release_date}
-          />
-        ))} */

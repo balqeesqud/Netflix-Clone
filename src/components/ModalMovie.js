@@ -1,7 +1,8 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import React from 'react';
+import React, { useRef } from 'react';
 import { useState } from 'react';
+import { Form } from 'react-bootstrap';
 
 //steps for modal (passing functions )
 //1. define the parent (Movie) & child (modal)
@@ -11,57 +12,89 @@ import { useState } from 'react';
 function ModalMovie({
   handleShow,
   handleClose,
+  img,
   show,
-  title,
-  overview,
   date,
-  id,
+  modalData,
+  commentHandler,
 }) {
   // props passed by by using destructuring // we can pass props and change {props.handleShow} etc..
   const [comment, setComment] = useState('');
+  const commentRef = useRef();
 
-  function handleComment(event) {
-    setComment(event.target.value);
+  function handleSubmit(event) {
+    event.preventDefault();
+    const userComment = commentRef.current.value;
+
+    console.log('modal data', modalData);
+
+    const newMovie = { ...modalData, userComment };
+
+    console.log('new movie', newMovie);
+    setComment(userComment);
+
+    commentHandler(newMovie, newMovie.id);
+    console.log('comment', comment);
   }
-  async function handleCommentSubmit() {
-    const response = await fetch(`http://localhost:3001/comments/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify({ newcomment: comment }),
+
+  async function handleAddFav(event) {
+    event.preventDefault();
+    let URL = `${process.env.REACT_APP_SERVER_URL}/movie`; //post request as Backend
+    let data = {
+      movieTitle: modalData.title,
+      year: modalData.release_date,
+      overView: modalData.overview,
+      comment: modalData.comment,
+    };
+    let response = await fetch(URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
     });
-    handleClose();
-  }
+    console.log(response);
 
+    let receivedData = await response.json();
+    console.log('receivedData', receivedData);
+    if (response.status === 201) {
+      alert('added successfully');
+    }
+  }
   return (
     <div>
       <Modal show={show} onHide={handleClose} animation={false}>
         <Modal.Header closeButton>
           <Modal.Title>
-            {title}
-            {date}
+            {modalData.title}
+            {modalData.date}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {overview}
+          <img src={modalData.img} alt={modalData.title} />
+          {modalData.overview}
           <br /> <br />
-          <textarea
-            style={{
-              width: '100%',
-              height: '20%',
-              textAlign: 'start',
-              marginTop: '5px',
-              paddingTop: '6px',
-            }}
-            type="text"
-            placeholder="Enter your comment"
-            onChange={handleComment}
-          />
+          <Form onSubmit={(event) => handleSubmit(event)}>
+            <Form.Group className="mb-3" controlId="formBasicEmail">
+              <Form.Label>Comment</Form.Label>
+              <Form.Control
+                ref={commentRef}
+                type="text"
+                placeholder="Add new Comment"
+              />
+            </Form.Group>
+            <Button variant="primary" type="submit">
+              Submit
+            </Button>
+          </Form>
+          {/* {modalData.comment ? modalData.comment : 'No Comment Added'} */}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCommentSubmit}>
-            Add comment
+          <Button variant="secondary" onClick={handleClose}>
+            Close
           </Button>
-          <Button variant="primary" onClick={handleClose}>
-            close
+          <Button variant="primary" onClick={(event) => handleAddFav(event)}>
+            Add to favorites
           </Button>
         </Modal.Footer>
       </Modal>
