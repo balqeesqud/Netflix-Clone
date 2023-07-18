@@ -27,7 +27,6 @@ function NavBar() {
           <Nav className="me-auto">
             <Nav.Link href="/">Home</Nav.Link>
             <Nav.Link href="/favorite">Favorite List</Nav.Link>
-            {/* <Nav.Link href="/list">Movie Lists</Nav.Link> */}
           </Nav>
         </Navbar.Collapse>
       </Container>

@@ -24,7 +24,6 @@ function Movie(props) {
           justifyContent: 'center',
         }}
       >
-        {/* {props.poster_path} */}
         <Card.Img
           variant="top"
           src={props.img}
@@ -49,27 +48,18 @@ function Movie(props) {
             Add to favorites
           </Button>
           <br />
-          {/* <Button
-            style={{
-              padding: '7px',
-              marginTop: '10px',
-              marginBottom: '0 auto',
-            }}
-            onClick={handleShow}
-            variant="btn btn-secondary"
-          >
-            Add to favorite list
-          </Button> */}
         </Card.Body>
       </Card>
       <ModalMovie
-        id={props.id} //
+        commentHandler={props.commentHandler}
+        modalData={props.data}
+        id={props.id}
         handleClose={handleClose}
         handleShow={handleShow}
         show={show}
         title={props.title}
         overview={props.overview}
-        img={props.poster_path}
+        img={props.img}
         date={props.release_date}
       />
     </div>
