@@ -42,10 +42,12 @@ function ModalMovie({
     let URL = `${process.env.REACT_APP_SERVER_URL}/movie`; //post request as Backend
     let data = {
       movieTitle: modalData.title,
-      year: modalData.release_date,
-      overView: modalData.overview,
+      year: parseInt(modalData.release_date),
+      overView: modalData.overview.substring(0, 200),
       comment: modalData.comment,
     };
+    console.log('data is:', data);
+
     let response = await fetch(URL, {
       method: 'POST',
       headers: {
@@ -53,7 +55,6 @@ function ModalMovie({
       },
       body: JSON.stringify(data),
     });
-    console.log(response);
 
     let receivedData = await response.json();
     console.log('receivedData', receivedData);
